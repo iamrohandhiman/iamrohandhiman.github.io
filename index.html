@@ -1,43 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rohan's Test Page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rohan's Website</title>
+
   <style>
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f6f7f9;
+      color: #171717;
+    }
+
+    header {
+      padding: 24px 40px;
+      background: white;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 50px 24px;
+    }
+
+    h1 {
+      font-size: 42px;
+      margin: 0 0 12px;
+    }
+
+    p {
+      color: #666;
+      font-size: 18px;
+    }
+
+    .card {
+      margin-top: 40px;
+      padding: 30px;
+      background: white;
+      border-radius: 14px;
+      border: 1px solid #e5e5e5;
+    }
+
+    .ocean-ad {
+      width: 100%;
+      min-height: 300px;
+      margin-top: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      color: #222;
+      background: #fafafa;
+      border: 1px dashed #ccc;
+      border-radius: 10px;
     }
-    .container {
-      text-align: center;
-      padding: 40px;
-    }
-    h1 { margin-bottom: 10px; }
-    p { color: #666; }
-    .status {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 16px;
-      border-radius: 8px;
-      background: #e6f7e6;
-      color: #187a18;
-      font-weight: 600;
+
+    .ocean-ad::before {
+      content: "Ocean Ad";
+      color: #999;
     }
   </style>
+
+  <!-- Ocean Ads CDN -->
+  <script src="https://prime-api.oceanadnetwork.com/cdn/p/92040231-8f0e-4308-8e69-ec8e9db0023a/init.js"></script>
 </head>
+
 <body>
-  <div class="container">
-    <h1>GitHub Pages is working 🚀</h1>
-    <p>This is a temporary test page.</p>
-    <div class="status">Deployment successful</div>
-  </div>
+  <header>
+    <strong>Rohan</strong>
+  </header>
+
+  <main>
+    <h1>Welcome to Rohan's Website 👋</h1>
+    <p>This is a test website running on GitHub Pages with Ocean Ads.</p>
+
+    <div class="card">
+      <h2>Advertisement</h2>
+
+      <!-- Ocean Ads inventory slot -->
+      <div class="ocean-ad"></div>
+    </div>
+  </main>
 </body>
 </html>
