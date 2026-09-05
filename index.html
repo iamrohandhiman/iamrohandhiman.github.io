@@ -6,7 +6,9 @@
   <title>Rohan's Website</title>
 
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -65,6 +67,26 @@
 
   <!-- Ocean Ads CDN -->
   <script src="https://prime-api.oceanadnetwork.com/cdn/p/92040231-8f0e-4308-8e69-ec8e9db0023a/init.js"></script>
+
+  <!-- Fix current SDK config -->
+  <script>
+    if (window.__OCEAN_CONFIG__) {
+      const config = window.__OCEAN_CONFIG__;
+
+      config.websites = {
+        "iamrohandhiman.github.io":
+          config.websites["https://iamrohandhiman.github.io"]
+          || config.websites["https://iamrohandhiman.github.io/"]
+      };
+    }
+
+    // Initialize after fixing the configuration
+    window.addEventListener("load", function () {
+      if (window.OceanAds) {
+        window.OceanAds.forceInit();
+      }
+    });
+  </script>
 </head>
 
 <body>
@@ -74,12 +96,14 @@
 
   <main>
     <h1>Welcome to Rohan's Website 👋</h1>
-    <p>This is a test website running on GitHub Pages with Ocean Ads.</p>
+
+    <p>
+      This is a test website running on GitHub Pages with Ocean Ads.
+    </p>
 
     <div class="card">
       <h2>Advertisement</h2>
 
-      <!-- Ocean Ads inventory slot -->
       <div class="ocean-ad"></div>
     </div>
   </main>
