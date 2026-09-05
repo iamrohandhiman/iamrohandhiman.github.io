@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -63,33 +64,22 @@
       content: "Ocean Ad";
       color: #999;
     }
+
+    #ocean-debug {
+      margin-top: 20px;
+      padding: 12px;
+      background: #111;
+      color: #0f0;
+      font-family: monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+    }
   </style>
 
-  <!-- Ocean Ads CDN -->
-  <script src="https://prime-api.oceanadnetwork.com/cdn/p/92040231-8f0e-4308-8e69-ec8e9db0023a/init.js"></script>
-
-  <!-- Fix current SDK config -->
-  <script>
-    if (window.__OCEAN_CONFIG__) {
-      const config = window.__OCEAN_CONFIG__;
-
-      config.websites = {
-        "iamrohandhiman.github.io":
-          config.websites["https://iamrohandhiman.github.io"]
-          || config.websites["https://iamrohandhiman.github.io/"]
-      };
-    }
-
-    // Initialize after fixing the configuration
-    window.addEventListener("load", function () {
-      if (window.OceanAds) {
-        window.OceanAds.forceInit();
-      }
-    });
-  </script>
 </head>
 
 <body>
+
   <header>
     <strong>Rohan</strong>
   </header>
@@ -97,15 +87,170 @@
   <main>
     <h1>Welcome to Rohan's Website 👋</h1>
 
-    <p>
-      This is a test website running on GitHub Pages with Ocean Ads.
-    </p>
+```
+<p>
+  This is a test website running on GitHub Pages with Ocean Ads.
+</p>
 
-    <div class="card">
-      <h2>Advertisement</h2>
+<div class="card">
+  <h2>Advertisement</h2>
 
-      <div class="ocean-ad"></div>
-    </div>
+  <div class="ocean-ad"></div>
+
+  <div id="ocean-debug"></div>
+</div>
+```
+
   </main>
+
+  <!-- Ocean Ads CDN -->
+
+  <script
+    src="https://prime-api.oceanadnetwork.com/cdn/p/92040231-8f0e-4308-8e69-ec8e9db0023a/init.js"
+    onload="window.__oceanCdnLoaded = true"
+    onerror="window.__oceanCdnLoaded = false">
+  </script>
+
+  <script>
+    (function () {
+      const debug = document.getElementById("ocean-debug");
+
+      function log(message, value) {
+        const line =
+          message +
+          (value !== undefined ? " " + JSON.stringify(value, null, 2) : "");
+
+        console.log("[Ocean Test]", line);
+        debug.textContent += line + "\n";
+      }
+
+      log("CDN loaded:", window.__oceanCdnLoaded);
+
+      log("Hostname:", window.location.hostname);
+
+      log(
+        "OceanAds type:",
+        typeof window.OceanAds
+      );
+
+      log(
+        "Ocean config exists:",
+        !!window.__OCEAN_CONFIG__
+      );
+
+      if (!window.__OCEAN_CONFIG__) {
+        log("ERROR: __OCEAN_CONFIG__ is missing.");
+        return;
+      }
+
+      const config = window.__OCEAN_CONFIG__;
+
+      log(
+        "Configured websites:",
+        Object.keys(config.websites || {})
+      );
+
+      /*
+       * The CDN currently stores:
+       *
+       *   https://iamrohandhiman.github.io
+       *
+       * but the browser hostname is:
+       *
+       *   iamrohandhiman.github.io
+       *
+       * Add the hostname-form key.
+       */
+      const currentHost = window.location.hostname;
+
+      if (
+        config.websites["https://iamrohandhiman.github.io"] &&
+        !config.websites[currentHost]
+      ) {
+        config.websites[currentHost] =
+          config.websites["https://iamrohandhiman.github.io"];
+      }
+
+      log(
+        "Websites after normalization:",
+        Object.keys(config.websites || {})
+      );
+
+      /*
+       * Turn on SDK debug mode.
+       */
+      window.__OCEAN_DEBUG__ = true;
+
+      /*
+       * The SDK has already loaded its config internally.
+       * Force initialization again after the config mutation.
+       *
+       * Also support the manual-init helper from the CDN.
+       */
+      window.addEventListener("load", function () {
+        log("window load fired");
+
+        log(
+          "OceanAds type at load:",
+          typeof window.OceanAds
+        );
+
+        log(
+          "Manual init helper:",
+          typeof window.__OCEAN_MANUAL_INIT__
+        );
+
+        if (typeof window.__OCEAN_MANUAL_INIT__ === "function") {
+          log("Calling __OCEAN_MANUAL_INIT__...");
+
+          window.__OCEAN_MANUAL_INIT__()
+            .then(function () {
+              log("Ocean Ads manual init resolved.");
+
+              if (window.OceanAds) {
+                log(
+                  "SDK ready:",
+                  window.OceanAds.isReady()
+                );
+              }
+            })
+            .catch(function (error) {
+              console.error("[Ocean Test] Init error:", error);
+              log(
+                "INIT ERROR:",
+                error && error.message
+                  ? error.message
+                  : String(error)
+              );
+            });
+
+        } else if (window.OceanAds) {
+          log("Calling OceanAds.forceInit...");
+
+          window.OceanAds.forceInit()
+            .then(function () {
+              log("Ocean Ads forceInit resolved.");
+              log(
+                "SDK ready:",
+                window.OceanAds.isReady()
+              );
+            })
+            .catch(function (error) {
+              console.error("[Ocean Test] forceInit error:", error);
+              log(
+                "FORCE INIT ERROR:",
+                error && error.message
+                  ? error.message
+                  : String(error)
+              );
+            });
+
+        } else {
+          log("ERROR: window.OceanAds does not exist.");
+        }
+      });
+    })();
+  </script>
+
 </body>
 </html>
